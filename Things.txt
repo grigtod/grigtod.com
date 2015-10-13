@@ -1,0 +1,14 @@
+git push origin gh-pages
+
+- Unity
+- 3Ds Max
+- Photoshop
+- Git 
+- Visual Studio
+
+
+- PhysX
+- Oculus rift
+- freevi 
+- tobii eyex
+- Arduino
