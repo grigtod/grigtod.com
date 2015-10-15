@@ -40,116 +40,68 @@
                         <div class="thumbnail">
 						<div class="circle-border zoom-in-avatar">
 			
-			
-			
-			
-			
-			
-			
-			
+			 <!--WEBGL STUFF START-->
 
 		<div id="container"></div>
-
 		<script src="webgl/build/three.min.js"></script>
-
 		<script src="webgl/js/Detector.js"></script>
-
 		<script id="vertexShader" type="x-shader/x-vertex">
-
 			precision mediump float;
 			precision mediump int;
-
 			uniform mat4 modelViewMatrix; // optional
 			uniform mat4 projectionMatrix; // optional
-
 			attribute vec3 position;
 			attribute vec4 color;
-
 			varying vec3 vPosition;
 			varying vec4 vColor;
-
 			void main()	{
-
 				vPosition = position;
 				vColor = color;
-
 				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-
 			}
-
 		</script>
-
 		<script id="fragmentShader" type="x-shader/x-fragment">
 
 			precision mediump float;
 			precision mediump int;
-
 			uniform float time;
-
 			varying vec3 vPosition;
 			varying vec4 vColor;
 
 			void main()	{
-
 				vec4 color = vec4( vColor );
 				color.r += sin( vPosition.x * 10.0 + time ) * 0.5;
-
 				gl_FragColor = color;
-
 			}
 
 		</script>
-
 		<script>
 
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-
 			var container;
-
 			var camera, scene, renderer;
-
 			init();
 			animate();
-
 			function init() {
-
 				container = document.getElementById( 'container' );
-
 				camera = new THREE.PerspectiveCamera( 50, 1, 1, 10 );
 				camera.position.z = 2;
-
 				scene = new THREE.Scene();
-
 				// geometry
-
 				var triangles = 500;
-
 				var geometry = new THREE.BufferGeometry();
-
 				var vertices = new THREE.Float32Attribute( triangles * 3 * 3, 3 );
-
 				for ( var i = 0, l = vertices.count; i < l; i ++ ) {
-
 					vertices.setXYZ( i, Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5 );
-
 				}
-
 				geometry.addAttribute( 'position', vertices );
-
 				var colors = new THREE.Float32Attribute( triangles * 3 * 4, 4 );
-
 				for ( var i = 0, l = colors.count; i < l; i ++ ) {
-
 					colors.setXYZW( i, Math.random(), Math.random(), Math.random(), Math.random() );
-
 				}
-
 				geometry.addAttribute( 'color', colors );
-
 				// material
-
 				var material = new THREE.RawShaderMaterial( {
-
 					uniforms: {
 						time: { type: "f", value: 1.0 }
 					},
@@ -159,91 +111,40 @@
 					transparent: true
 
 				} );
-
 				var mesh = new THREE.Mesh( geometry, material );
 				scene.add( mesh );
-
 				renderer = new THREE.WebGLRenderer({ alpha: true });
 				renderer.setClearColor(0xffffff, 0);
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth/7, window.innerWidth/7 );
 				container.appendChild( renderer.domElement );
-
 				window.addEventListener( 'resize', onWindowResize, false );
 			}
 
 			function onWindowResize( event ) {
-
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
-
 				renderer.setSize( window.innerWidth/7, window.innerWidth/7 );
-
 			}
 
 			//
 
 			function animate() {
-
 				requestAnimationFrame( animate );
-
 				render();
-				
-
 			}
 
 			function render() {
-
 				var time = performance.now();
-
 				var object = scene.children[ 0 ];
-
 				object.rotation.y = time * 0.0005;
 				object.material.uniforms.time.value = time * 0.005;
-
 				renderer.render( scene, camera );
-
 			}
-
 		</script>
 			
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+			<!--WEBGL STUFF END-->
 			
 			
 			
@@ -295,7 +196,8 @@
                         <a href="#noAction">Identity</a>
                     </li>
                 </ul>
-                <!-- Start details for portfolio project 1 -->
+				
+                <!-- Start details for Project Foundation -->
                 <div id="single-project">
                     <div id="slidingDiv" class="toggleDiv row-fluid single-project">
                         <div class="span6">
@@ -304,26 +206,18 @@
                         <div class="span6">
                             <div class="project-description">
                                 <div class="project-title clearfix">
-                                    <h3>Webste for Some Client</h3>
+                                    <h3>Project Foundation</h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                                 </div>
-                                <div class="project-info">
-                                    <div>
-                                        <span>Client</span>Some Client Name</div>
-                                    <div>
-                                        <span>Date</span>July 2013</div>
-                                    <div>
-                                        <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                                    <div>
-                                        <span>Link</span>http://examplecomp.com</div>
-                                </div>
-                                <p>Believe in yourself! Have faith in your abilities! Without a humble but reasonable confidence in your own powers you cannot be successful or happy.</p>
+								<iframe width="550" height="309" src="https://www.youtube.com/embed/B29raKfWxoA" frameborder="0" allowfullscreen></iframe>
+                                <p>“Project Foundation” is a multiplayer game prototype. It was developed by a small group of people. Each one of us wore many hats and this is a result of enormous collaborative effort and a lot of trial and error.</p>		
                             </div>
                         </div>
                     </div>
-                    <!-- End details for portfolio project 1 -->
+                    <!-- End details for Project Foundation -->
+					
                     <!-- Start details for portfolio project 2 -->
                     <div id="slidingDiv1" class="toggleDiv row-fluid single-project">
                         <div class="span6">
@@ -332,23 +226,22 @@
                         <div class="span6">
                             <div class="project-description">
                                 <div class="project-title clearfix">
-                                    <h3>Webste for Some Client</h3>
+                                    <h3>Gaze-contingent Depth of Field</h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                                 </div>
-                                <div class="project-info">
-                                    <div>
-                                        <span>Client</span>Some Client Name</div>
-                                    <div>
-                                        <span>Date</span>July 2013</div>
-                                    <div>
-                                        <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                                    <div>
-                                        <span>Link</span>http://examplecomp.com</div>
-                                </div>
-                                <p>Life is a song - sing it. Life is a game - play it. Life is a challenge - meet it. Life is a dream - realize it. Life is a sacrifice - offer it. Life is love - enjoy it.</p>
-                            </div>
+								<iframe width="550" height="309" src="https://www.youtube.com/embed/vNmGrqaB_mk" frameborder="0" allowfullscreen></iframe>
+                                <p>In my opinion eye tracking is very important for virtual/augmented reality HMD. It is relatively cheap hardware wise and it can practically be used as another form of input. Successfully utilizing gaze tracking increases immersion and provides easier ways to interact with objects.</p>
+								<p>Many games use depth of field to increase immersion, but for proper real-lifelike experience in a virtual reality head mounted display simple depth of field effect is not enough. Gaze-contingent depth of field on the other hand helps simulate vision effects such as vergence and focus more closely to the real life and effectively will decrease eye strain and increase immersion.</p>
+								<p>In the video above I have implemented such depth of field. It uses Tobii EyeX and Unity3D.
+								<br>The user can switch between two different versions of gaze-dependant depth of field.
+								<br>The first version features blurring that happens on objects both close and further away from the camera.
+								<br>The second version is more lifelike and the DOF can only be observed when the user focuses on an object that is close.</p>
+								<p>Having an eye tracking solution in a virtual reality HMD also brings the possibility of more personalized LOD.
+								<br>Currently the Level Of Detail in games happen based of the distance from the object to the camera. The further the distance the smaller is the polycount of the object. But sometimes the player looks at the background can could notice LOD popping of objects or generally unpleasantness in the scenery far away.
+								<br>With an eye tracking solution a new form of LOD can be achieved, one that prioritizes objects closer to the position the player looks at. That way objects far from the player gaze need not be rendered with the highest LOD possible even if they are close to the camera. This sort of LOD in combination with the gaze-contingent depth of field will further mask LOD popping and increase performance as only objects that are observed will be fully rendered with maximum quality.</p>   
+						   </div>
                         </div>
                     </div>
                     <!-- End details for portfolio project 2 -->
@@ -555,8 +448,8 @@
                                 <a href="#single-project" class="more show_hide" rel="#slidingDiv">
                                     <i class="icon-plus"></i>
                                 </a>
-                                <h3>Thumbnail label</h3>
-                                <p>Thumbnail caption...</p>
+                                <h3>Project Foundation</h3>
+                                <p>Multiplayer top-down shooter prototype</p>
                                 <div class="mask"></div>
                             </div>
                         </li>
@@ -566,8 +459,8 @@
                                 <a href="#single-project" class="show_hide more" rel="#slidingDiv1">
                                     <i class="icon-plus"></i>
                                 </a>
-                                <h3>Thumbnail label</h3>
-                                <p>Thumbnail caption...</p>
+                                <h3>Gaze-contingent Depth of Field</h3>
+                                <p>Use of eye tracking for more realistic FOV</p>
                                 <div class="mask"></div>
                             </div>
                         </li>
