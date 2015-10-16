@@ -33,124 +33,197 @@
     <body>
         <div class="section primary-section" id="About">
             <div class="triangle"></div>
-			
-			  <div class="container">
-			<div class="row-fluid team"> 
+		
+			<div class="container">
+				<div class="row-fluid team"> 
                     <div class="span4.centered" id="first-person">
                         <div class="thumbnail">
-						<div class="circle-border zoom-in-avatar">
+						<!--div class="circle-border zoom-in-avatar"-->
 			
-			 <!--WEBGL STUFF START-->
+			<!--WEBGL STUFF START-->
+<div id="container"></div>
+							<script src="webgl/build/three.min.js"></script>
+							<script src="webgl/js/Detector.js"></script>
+							<script src="webgl/js/libs/stats.min.js"></script>
 
-		<div id="container"></div>
-		<script src="webgl/build/three.min.js"></script>
-		<script src="webgl/js/Detector.js"></script>
-		<script id="vertexShader" type="x-shader/x-vertex">
-			precision mediump float;
-			precision mediump int;
-			uniform mat4 modelViewMatrix; // optional
-			uniform mat4 projectionMatrix; // optional
-			attribute vec3 position;
-			attribute vec4 color;
-			varying vec3 vPosition;
-			varying vec4 vColor;
-			void main()	{
-				vPosition = position;
-				vColor = color;
-				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-			}
-		</script>
-		<script id="fragmentShader" type="x-shader/x-fragment">
+							<script id="vs" type="x-shader/x-vertex">
 
-			precision mediump float;
-			precision mediump int;
-			uniform float time;
-			varying vec3 vPosition;
-			varying vec4 vColor;
+								uniform sampler2D map;
 
-			void main()	{
-				vec4 color = vec4( vColor );
-				color.r += sin( vPosition.x * 10.0 + time ) * 0.5;
-				gl_FragColor = color;
-			}
+								uniform float width;
+								uniform float height;
+								uniform float nearClipping, farClipping;
 
-		</script>
-		<script>
+								uniform float pointSize;
+								uniform float zOffset;
 
-			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
-			var container;
-			var camera, scene, renderer;
-			init();
-			animate();
-			function init() {
-				container = document.getElementById( 'container' );
-				camera = new THREE.PerspectiveCamera( 50, 1, 1, 10 );
-				camera.position.z = 2;
-				scene = new THREE.Scene();
-				// geometry
-				var triangles = 500;
-				var geometry = new THREE.BufferGeometry();
-				var vertices = new THREE.Float32Attribute( triangles * 3 * 3, 3 );
-				for ( var i = 0, l = vertices.count; i < l; i ++ ) {
-					vertices.setXYZ( i, Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5 );
-				}
-				geometry.addAttribute( 'position', vertices );
-				var colors = new THREE.Float32Attribute( triangles * 3 * 4, 4 );
-				for ( var i = 0, l = colors.count; i < l; i ++ ) {
-					colors.setXYZW( i, Math.random(), Math.random(), Math.random(), Math.random() );
-				}
-				geometry.addAttribute( 'color', colors );
-				// material
-				var material = new THREE.RawShaderMaterial( {
-					uniforms: {
-						time: { type: "f", value: 1.0 }
-					},
-					vertexShader: document.getElementById( 'vertexShader' ).textContent,
-					fragmentShader: document.getElementById( 'fragmentShader' ).textContent,
-					side: THREE.DoubleSide,
-					transparent: true
+								varying vec2 vUv;
 
-				} );
-				var mesh = new THREE.Mesh( geometry, material );
-				scene.add( mesh );
-				renderer = new THREE.WebGLRenderer({ alpha: true });
-				renderer.setClearColor(0xffffff, 0);
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth/7, window.innerWidth/7 );
-				container.appendChild( renderer.domElement );
-				window.addEventListener( 'resize', onWindowResize, false );
-			}
+								const float XtoZ = 1.11146; // tan( 1.0144686 / 2.0 ) * 2.0;
+								const float YtoZ = 0.83359; // tan( 0.7898090 / 2.0 ) * 2.0;
 
-			function onWindowResize( event ) {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				renderer.setSize( window.innerWidth/7, window.innerWidth/7 );
-			}
+								void main() {
 
-			//
+									vUv = vec2( position.x / width, position.y / height );
 
-			function animate() {
-				requestAnimationFrame( animate );
-				render();
-			}
+									vec4 color = texture2D( map, vUv );
+									float depth = ( color.r + color.g + color.b ) / 0.01;
 
-			function render() {
-				var time = performance.now();
-				var object = scene.children[ 0 ];
-				object.rotation.y = time * 0.0005;
-				object.material.uniforms.time.value = time * 0.005;
-				renderer.render( scene, camera );
-			}
-		</script>
-			
+									// Projection code by @kcmic
+
+									float z = ( 1.0 - depth ) * (farClipping - nearClipping) + nearClipping;
+
+									vec4 pos = vec4(
+										( position.x / width - 0.5 ) * z * XtoZ,
+										( position.y / height - 0.5 ) * z * YtoZ,
+										- z + zOffset,
+										1.0);
+									gl_PointSize = pointSize;
+									gl_Position = projectionMatrix * modelViewMatrix * pos;
+								}
+							</script>
+
+							<script id="fs" type="x-shader/x-fragment">
+								uniform sampler2D map;
+								varying vec2 vUv;
+
+								void main() {
+									vec4 color = texture2D( map, vUv );
+									gl_FragColor = vec4( color.r, color.g, color.b, 0.2 );
+								}
+
+							</script>
+							<script>
+								var container;
+								var scene, camera, light, renderer;
+								var geometry, cube, mesh, material;
+								var mouse, center;
+								var stats;
+								var video, texture;
+								if ( Detector.webgl ) {
+									init();
+									animate();
+								} else {
+									Detector.addGetWebGLMessage();
+								}
+
+								function init() {
+
+									container = document.getElementById( 'container' );
+									stats = new Stats();
+									stats.domElement.style.position = 'absolute';
+									stats.domElement.style.top = '0px';
+
+									camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 1, 10000 );
+									camera.position.set( 0, 0, 500 );
+
+									scene = new THREE.Scene();
+									center = new THREE.Vector3();
+									center.z = - 1000;
+
+									video = document.createElement( 'video' );
+									video.addEventListener( 'loadedmetadata', function ( event ) {
+
+										texture = new THREE.VideoTexture( video );
+										texture.minFilter = THREE.NearestFilter;
+
+										var width = 640, height = 480;
+										var nearClipping = 20, farClipping = 1;
+
+										geometry = new THREE.BufferGeometry();
+
+										var vertices = new Float32Array( width * height * 3 );
+
+										for ( var i = 0, j = 0, l = vertices.length; i < l; i += 3, j ++ ) {
+
+											vertices[ i ] = j % width;
+											vertices[ i + 1 ] = Math.floor( j / width );
+
+										}
+
+										geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+
+										material = new THREE.ShaderMaterial( {
+
+											uniforms: {
+
+												"map": { type: "t", value: texture },
+												"width": { type: "f", value: width },
+												"height": { type: "f", value: height },
+												"nearClipping": { type: "f", value: nearClipping },
+												"farClipping": { type: "f", value: farClipping },
+
+												"pointSize": { type: "f", value: 0.5 },
+												"zOffset": { type: "f", value: 1100 }
+
+											},
+											vertexShader: document.getElementById( 'vs' ).textContent,
+											fragmentShader: document.getElementById( 'fs' ).textContent,
+											blending: THREE.AdditiveBlending,
+											depthTest: false, depthWrite: false,
+											transparent: true
+
+										} );
+
+										mesh = new THREE.Points( geometry, material );
+										scene.add( mesh );
+										
+									}, false );
+									video.loop = true;
+									video.src = 'webgl/looped.webm';
+									video.play();
+
+									renderer = new THREE.WebGLRenderer({ alpha: true });
+									renderer.setClearColor(0xffffff, 0);
+									camera.aspect = 1;
+									camera.updateProjectionMatrix();
+									renderer.setPixelRatio( window.devicePixelRatio );
+									renderer.setSize( window.innerWidth/7, window.innerWidth/7 );
+									container.appendChild( renderer.domElement );
+
+									mouse = new THREE.Vector3( 0, 0, 1 );
+
+									document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+									window.addEventListener( 'resize', onWindowResize, false );
+								}
+
+								function onWindowResize() 
+								{
+									camera.aspect = 1;
+									camera.updateProjectionMatrix();
+									renderer.setSize( window.innerWidth/7, window.innerWidth/7 );
+								}
+
+								function onDocumentMouseMove( event ) {
+									mouse.x = ( event.clientX - window.innerWidth / 2 );
+									mouse.y = ( event.clientY - window.innerHeight / 2 );
+								}
+
+								function animate() {
+									requestAnimationFrame( animate );
+									render();
+									stats.update();
+								}
+
+								function render() {
+
+								mesh.rotation.y =  (mouse.x  * 0.00025);
+								camera.position.x = -( mouse.x ) * 0.2;
+								mesh.rotation.x =  (mouse.y  * 0.00025);
+								camera.position.y = ( mouse.y ) * 0.2;
+								
+								renderer.render( scene, camera );
+
+								}
+
+							</script>
 			
 			<!--WEBGL STUFF END-->
 			
-			
-			
+
           
 						 <!--img class="img-circle" src="images/Team1.png"-->
-						  </div>
+						  <!--/div-->
                             <ul class="social">
                                 <li>
                                     <a target="_blank" href="http://twitter.com/grigtod">
