@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+
+<!--[if IE 9 ]><html class="ie9" lang="en-US"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="en-US"><!--<![endif]-->
+
+<head>
+
+    <meta charset="UTF-8" />
+<title>Automultiscopic 3D Display</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="template" content="Tracks 1.21" />
+<meta name="generator" content="WordPress 3.9.9" />
+<link rel="alternate" type="application/rss+xml" title="Grigor Todorov &raquo; Feed" href="http://grigtod.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Grigor Todorov &raquo; Comments Feed" href="http://grigtod.com/comments/feed/" />
+<link rel="pingback" href="http://grigtod.com/xmlrpc.php" />
+<link rel='stylesheet' id='ct-tracks-google-fonts-css'  href='//fonts.googleapis.com/css?family=Raleway%3A400%2C700&#038;ver=3.9.9' type='text/css' media='all' />
+<link rel='stylesheet' id='font-awesome-css'  href='http://grigtod.com/wp-content/themes/tracks/assets/font-awesome/css/font-awesome.min.css?ver=3.9.9' type='text/css' media='all' />
+<link rel='stylesheet' id='style-css'  href='http://grigtod.com/wp-content/themes/tracks/style.min.css?ver=1.21' type='text/css' media='all' />
+<script type='text/javascript' src='http://grigtod.com/wp-includes/js/jquery/jquery.js?ver=1.11.0'></script>
+<script type='text/javascript' src='http://grigtod.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://grigtod.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://grigtod.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Prototypes' href='http://grigtod.com/prototypes/' />
+<link rel='next' title='Zen Build' href='http://grigtod.com/zen-build/' />
+<link rel='canonical' href='http://grigtod.com/autostereoscopic-3d-display/' />
+<link rel='shortlink' href='http://grigtod.com/?p=161' />
+<!-- All in one Favicon 4.3 --><link rel="shortcut icon" href="http://grigtod.com/wp-content/uploads/2014/11/favicon.ico" />
+
+</head>
+
+
+<body id="tracks" class="wordpress ltr en en-us parent-theme y2015 m10 d16 h23 friday logged-out singular singular-post singular-post-161 ct-body not-front">
+
+<div class="overflow-container">
+    <a class="skip-content" href="#main">Skip to content</a>
+<header id="site-header" class="site-header" role="banner">
+
+    <div class='top-navigation'><div class='search-form-container'>
+    <button id="search-icon" class="search-icon">
+        <i class="fa fa-search"></i>
+    </button>
+    <form role="search" method="get" class="search-form" action="http://grigtod.com/">
+        <label class="screen-reader-text">Search for:</label>
+        <input type="search" class="search-field" placeholder="Search..." value="" name="s" title="Search for:" />
+        <input type="submit" class="search-submit" value='Go' />
+    </form>
+</div><ul class='social-media-icons'>            <li>
+            <a target="_blank" href="https://twitter.com/grigtod">
+                                <i class="fa fa-twitter-square"></i>            </a>
+            </li>            <li>
+            <a target="_blank" href="https://www.youtube.com/user/GrigorTodorov/videos">
+                                <i class="fa fa-youtube-square"></i>            </a>
+            </li>            <li>
+            <a target="_blank" href="http://uk.linkedin.com/in/grigtod">
+                                <i class="fa fa-linkedin-square"></i>            </a>
+            </li></ul></div>
+	<div id="title-info" class="title-info">
+		<h2 class='site-title'><a href='http://grigtod.com' title='Grigor Todorov'>Grigor Todorov</a></h2>	</div>
+
+	<button id="toggle-navigation" class="toggle-navigation"><i class="fa fa-bars"></i></button>
+
+<div id="menu-primary-tracks" class="menu-primary-tracks"></div>
+<div id="menu-primary" class="menu-container menu-primary" role="navigation">
+
+            <p class="site-description"></p>
+    
+    <div class="menu-unset"><ul><li class="page_item page-item-31"><a href="http://grigtod.com/">About</a></li><li class="page_item page-item-29 current_page_parent"><a href="http://grigtod.com/portfolio/">Portfolio</a></li><li class="page_item page-item-98"><a href="http://grigtod.com/academia/">Academia</a></li></ul></div>
+
+</div><!-- #menu-primary .menu-container -->
+
+</header>
+<div id="main" class="main" role="main">
+    <div class="entry post publish author-grigtod post-161 format-standard has-post-thumbnail category-uncategorized odd excerpt-1">
+        <div class='featured-image' style="background-image: url('http://grigtod.com/wp-content/uploads/2014/12/end.png')")></div>        <div class="entry-meta">
+                    </div>
+        <div class='entry-header'>
+            <h1 class='entry-title'>Automultiscopic 3D Display</h1>
+        </div>
+        <div class="entry-container">
+            <div class="entry-content">
+                <article>
+                    <p>My MSc project consists of using an Autostereoscopic 3D display + Microsoft Kinect to create new gameplay experiences.<br />
+The display I currently use achieves the autostereoscopy (3D with no need of glasses) via lenticular lens. The interesting thing about that specific model is that it combines subpixels to increase the overall width.</p>
+<p>The way subpixel rendering work is that every *new* pixel is a combination of 3 sub-pixels, each in a different row:<br />
+<a href="http://grigtod.com/wp-content/uploads/2014/12/varrier-combiner.png" target="_blank"><img class="alignnone size-medium wp-image-162" src="http://grigtod.com/wp-content/uploads/2014/12/varrier-combiner-300x225.png" alt="varrier-combiner" width="300" height="225" /><br />
+</a></p>
+<p>When combining subpixels a display could have 3 x (it&#8217;s original width) and 3 / (it&#8217;s original height).<br />
+Using this method a display with 4K resolution 3840&#215;2160 will have a resolution of: 11520&#215;720.<br />
+This means that a glassless display with 8 viewing points and a resolution of 1440&#215;720 per point is <a href="http://www.alioscopy.com/en/datasheet.php?model=Alioscopy%203D%20UHD%2031.5%22%20SW" target="_blank">possible</a>.</p>
+<p><span style="color: #ff0000;">1R</span> <span style="color: #00ff00;">2G </span><span style="color: #0000ff;">3B  </span><span style="color: #ff0000;">4R</span> <span style="color: #00ff00;">5G</span> <span style="color: #0000ff;">6B  </span><span style="color: #ff0000;">7R</span> <span style="color: #00ff00;">8G </span><span style="color: #0000ff;">1B    2<span style="color: #ff0000;">R</span> <span style="color: #00ff00;">3G </span>4B   </span><br />
+<span style="color: #ff0000;">8R</span> <span style="color: #00ff00;">1G</span> <span style="color: #0000ff;">2B  </span><span style="color: #ff0000;">3R</span> <span style="color: #00ff00;">4G</span> <span style="color: #0000ff;">5B  </span><span style="color: #ff0000;">6R</span> <span style="color: #00ff00;">7G</span> <span style="color: #0000ff;">8B    <span style="color: #ff0000;">1R </span><span style="color: #00ff00;">2G </span>3B    </span><br />
+<span style="color: #ff0000;">7R</span> <span style="color: #00ff00;">8G </span><span style="color: #0000ff;">1B</span>  <span style="color: #ff0000;">2R </span><span style="color: #00ff00;">3G </span><span style="color: #0000ff;">4B  </span><span style="color: #ff0000;">5R</span> <span style="color: #00ff00;">6G</span> <span style="color: #0000ff;">7B    8<span style="color: #ff0000;">R</span> <span style="color: #00ff00;">1G </span>2B<br />
+</span><span style="color: #ff0000;"><br />
+6R</span> <span style="color: #00ff00;">7G <span style="color: #0000ff;">8</span></span><span style="color: #0000ff;">B  <span style="color: #ff0000;">1</span></span><span style="color: #ff0000;">R </span><span style="color: #00ff00;">2G </span><span style="color: #0000ff;">3B  <span style="color: #ff0000;">4</span></span><span style="color: #ff0000;">R </span><span style="color: #00ff00;">5G <span style="color: #0000ff;">6</span></span><span style="color: #0000ff;">B    <span style="color: #ff0000;">7R </span><span style="color: #00ff00;">8G </span>1B<br />
+</span><span style="color: #ff0000;">5R</span> <span style="color: #00ff00;">6G </span><span style="color: #0000ff;">7B  <span style="color: #ff0000;">8</span></span><span style="color: #ff0000;">R </span><span style="color: #00ff00;">1G </span><span style="color: #0000ff;">2B  <span style="color: #ff0000;">3</span></span><span style="color: #ff0000;">R </span><span style="color: #00ff00;">4G </span><span style="color: #0000ff;">5B    <span style="color: #ff0000;">6R </span><span style="color: #00ff00;">7G </span>8B<br />
+</span><span style="color: #ff0000;">4R</span> <span style="color: #00ff00;">5G <span style="color: #0000ff;">6</span></span><span style="color: #0000ff;">B  </span><span style="color: #ff0000;">7R <span style="color: #00ff00;">8</span></span><span style="color: #00ff00;">G <span style="color: #0000ff;">1</span></span><span style="color: #0000ff;">B  <span style="color: #ff0000;">2</span></span><span style="color: #ff0000;">R </span><span style="color: #00ff00;">3G </span><span style="color: #0000ff;">4B    <span style="color: #ff0000;">5R </span><span style="color: #00ff00;">6G </span>7B</span></p>
+<p>This is quite interesting in itself, but unfortunately the user has to stay in a sweet spot to experience the 3D effect.<br />
+There are <a href="http://youtu.be/3oX-aOJMX34" target="_blank">ways</a> to achieve <span style="color: #333333;">glassless 180° 3D effect with no sweet spots, but this cannot be applied easily to a video game (you need to render the same scene from a large amount of different points).<br />
+For my MSc project I decided to detect the player motions and render the scene based of the head position.</span></p>
+<p>This project consists of two parts:<br />
+- Real time subpixel rendering of 8 view points.<br />
+- Use of head tracking to determine the location of the cameras in the virtual world.</p>
+<p><em><strong>Subpixel rendering:</strong></em></p>
+<p>I&#8217;ve been experimenting with CG shaders in Unity3D as well as <a href="http://youtu.be/lkiGH7Q76f4" target="_blank">image processing in OpenGL</a> before, but this was my first attempt to implement image processing in Unity3D.<br />
+It is still under development and I need to solve some problems, but my current implementation consists of rendering 8 render textures and sending them to a fragment shader. There I combine the appropriate subpixels and send it back to be displayed on the screen. Each camera renders in (width*3)/8 and height/3 and the overall performance is good.</p>
+<p>Here I will post two screenshots, but bear in mind that these are resized and cropped.<br />
+This is a screenshot of the current demo scene. You can see the set up of the 8 cameras:<br />
+<img class="alignnone wp-image-165 size-large" src="http://grigtod.com/wp-content/uploads/2014/12/start-1024x464.png" alt="start" width="1024" height="464" /><br />
+Here you can see the output image:<br />
+<img class="alignnone wp-image-166 size-large" src="http://grigtod.com/wp-content/uploads/2014/12/end-1024x465.png" alt="end" width="1024" height="465" /></p>
+<p>The 3 sliders control the distance between the cameras, the focus point distance and the field of view.</p>
+<p>Currently I am experiencing two problems.<br />
+- I can&#8217;t seem to get the right focus and there is some unpleasant blur effects happening to objects that are far from the focus point.<br />
+- Moiré pattern. I&#8217;ll need do some research on how to solve/minimize this.</p>
+<p>&nbsp;</p>
+<p><em><strong>Head tracking:</strong></em></p>
+<p>The first iteration of the face tracking is implemented using the OpenCVSharp wrapper for OpenCV.<br />
+A demonstration video:</p>
+<p><iframe width="500" height="281" src="http://www.youtube.com/embed/OlX_GpfXL80?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>This implementation is good if the camera is close to the head of the user. I will not be able to use it.<br />
+I will either use object tracking to determine users and then determine where is the head position or Microsoft Kinect.</p>
+<p>I am currently implementing head tracking (body tracking, but I will use the position of the head) with a Kinect:</p>
+<p><iframe width="500" height="375" src="http://www.youtube.com/embed/iZ2-ETwNrZE?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+                                    </article>
+            </div>
+                        <div class='entry-meta-bottom'>
+                <nav class='further-reading'><p class='prev'>
+            <span>Previous Post</span>
+            <a href='http://grigtod.com/prototypes/'>Prototypes</a>
+        </p><p class='next'>
+            <span>Next Post</span>
+            <a href='http://grigtod.com/zen-build/'>Zen Build</a>
+        </p></nav>                <div class="entry-categories">
+                                    </div>
+                <div class="entry-tags">
+                                    </div>
+            </div>
+                    </div>
+    </div>
+
+    
+</div> <!-- .main -->
+
+<footer class="site-footer" role="contentinfo">
+    <h3>
+        <a href="http://grigtod.com">Grigor Todorov</a>
+    </h3>
+            <ul class='social-media-icons'>            <li>
+            <a target="_blank" href="https://twitter.com/grigtod">
+                                <i class="fa fa-twitter-square"></i>            </a>
+            </li>            <li>
+            <a target="_blank" href="https://www.youtube.com/user/GrigorTodorov/videos">
+                                <i class="fa fa-youtube-square"></i>            </a>
+            </li>            <li>
+            <a target="_blank" href="http://uk.linkedin.com/in/grigtod">
+                                <i class="fa fa-linkedin-square"></i>            </a>
+            </li></ul>    <div class="design-credit">
+        <p><a href="http://www.competethemes.com/tracks/">Tracks WordPress Theme</a> by Compete Themes</p>
+    </div>
+</footer>
+<button id="return-top" class="return-top">
+    <i class="fa fa-arrow-up"></i>
+</button>
+
+
+</div><!-- .overflow-container -->
+
+<script type='text/javascript' src='http://grigtod.com/wp-content/themes/tracks/js/build/production.min.js?ver=3.9.9' async='async'></script>
+</body>
+</html>

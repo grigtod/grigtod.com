@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+
+<!--[if IE 9 ]><html class="ie9" lang="en-US"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="en-US"><!--<![endif]-->
+
+<head>
+
+    <meta charset="UTF-8" />
+<title>Prototypes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="template" content="Tracks 1.21" />
+<meta name="generator" content="WordPress 3.9.9" />
+<link rel="alternate" type="application/rss+xml" title="Grigor Todorov &raquo; Feed" href="http://grigtod.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Grigor Todorov &raquo; Comments Feed" href="http://grigtod.com/comments/feed/" />
+<link rel="pingback" href="http://grigtod.com/xmlrpc.php" />
+<link rel='stylesheet' id='ct-tracks-google-fonts-css'  href='//fonts.googleapis.com/css?family=Raleway%3A400%2C700&#038;ver=3.9.9' type='text/css' media='all' />
+<link rel='stylesheet' id='font-awesome-css'  href='http://grigtod.com/wp-content/themes/tracks/assets/font-awesome/css/font-awesome.min.css?ver=3.9.9' type='text/css' media='all' />
+<link rel='stylesheet' id='style-css'  href='http://grigtod.com/wp-content/themes/tracks/style.min.css?ver=1.21' type='text/css' media='all' />
+<script type='text/javascript' src='http://grigtod.com/wp-includes/js/jquery/jquery.js?ver=1.11.0'></script>
+<script type='text/javascript' src='http://grigtod.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://grigtod.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://grigtod.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='next' title='Automultiscopic 3D Display' href='http://grigtod.com/autostereoscopic-3d-display/' />
+<link rel='canonical' href='http://grigtod.com/prototypes/' />
+<link rel='shortlink' href='http://grigtod.com/?p=110' />
+<!-- All in one Favicon 4.3 --><link rel="shortcut icon" href="http://grigtod.com/wp-content/uploads/2014/11/favicon.ico" />
+
+</head>
+
+
+<body id="tracks" class="wordpress ltr en en-us parent-theme y2015 m10 d16 h23 friday logged-out singular singular-post singular-post-110 ct-body not-front">
+
+<div class="overflow-container">
+    <a class="skip-content" href="#main">Skip to content</a>
+<header id="site-header" class="site-header" role="banner">
+
+    <div class='top-navigation'><div class='search-form-container'>
+    <button id="search-icon" class="search-icon">
+        <i class="fa fa-search"></i>
+    </button>
+    <form role="search" method="get" class="search-form" action="http://grigtod.com/">
+        <label class="screen-reader-text">Search for:</label>
+        <input type="search" class="search-field" placeholder="Search..." value="" name="s" title="Search for:" />
+        <input type="submit" class="search-submit" value='Go' />
+    </form>
+</div><ul class='social-media-icons'>            <li>
+            <a target="_blank" href="https://twitter.com/grigtod">
+                                <i class="fa fa-twitter-square"></i>            </a>
+            </li>            <li>
+            <a target="_blank" href="https://www.youtube.com/user/GrigorTodorov/videos">
+                                <i class="fa fa-youtube-square"></i>            </a>
+            </li>            <li>
+            <a target="_blank" href="http://uk.linkedin.com/in/grigtod">
+                                <i class="fa fa-linkedin-square"></i>            </a>
+            </li></ul></div>
+	<div id="title-info" class="title-info">
+		<h2 class='site-title'><a href='http://grigtod.com' title='Grigor Todorov'>Grigor Todorov</a></h2>	</div>
+
+	<button id="toggle-navigation" class="toggle-navigation"><i class="fa fa-bars"></i></button>
+
+<div id="menu-primary-tracks" class="menu-primary-tracks"></div>
+<div id="menu-primary" class="menu-container menu-primary" role="navigation">
+
+            <p class="site-description"></p>
+    
+    <div class="menu-unset"><ul><li class="page_item page-item-31"><a href="http://grigtod.com/">About</a></li><li class="page_item page-item-29 current_page_parent"><a href="http://grigtod.com/portfolio/">Portfolio</a></li><li class="page_item page-item-98"><a href="http://grigtod.com/academia/">Academia</a></li></ul></div>
+
+</div><!-- #menu-primary .menu-container -->
+
+</header>
+<div id="main" class="main" role="main">
+    <div class="entry post publish author-grigtod post-110 format-standard has-post-thumbnail category-uncategorized odd excerpt-1">
+        <div class='featured-image' style="background-image: url('http://grigtod.com/wp-content/uploads/2014/10/omega-6-728.jpg')")></div>        <div class="entry-meta">
+                    </div>
+        <div class='entry-header'>
+            <h1 class='entry-title'>Prototypes</h1>
+        </div>
+        <div class="entry-container">
+            <div class="entry-content">
+                <article>
+                    <p>Through the years I have developed numerous game prototypes. Here you can find videos of some of my favourites.</p>
+<p>Iron Man game:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/KtS8EoUmXBw?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Little Red Riding Hood game:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/m0KkLcTNX-s?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Augmented reality prototype (for the museum project):</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/Jz6blYyzva0?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Realism studies (PB shaders etc):</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/V5fZDH-d26U?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/04Bxf6VzsHQ?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>CubCl game for university assignment in project management:</p>
+<p><iframe width="500" height="281" src="http://www.youtube.com/embed/nFLNylyNBng?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>&#8220;Halt and Catch Fire&#8221; inspired game:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/_XePuRyD6_o?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Use voice to control stuff:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/n2iFdsrJxKE?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>&#8220;What if we can use our sound waves to see ?&#8221; prototype:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/O0T-JNaBfF8?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Bike game:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/zmFa_-sqpVI?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Robotic Hand:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/gwYZCRClqAs?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Pirate ship:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/vfwjaP0jI00?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Batmobile game:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/yVnLC81mW_Y?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Realistic spaceship thrusters:</p>
+<p><iframe width="500" height="281" src="http://www.youtube.com/embed/kJAnlvZ-Xhs?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Blob game:</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/h9yVFyo4xv4?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>Snowmobile (deformable terrain):</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/W44kPYAzkyA?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+                                    </article>
+            </div>
+                        <div class='entry-meta-bottom'>
+                <nav class='further-reading'><p class='prev'>
+            <span>This is the oldest post</span>
+            <a href='http://grigtod.com'>Return to Blog</a>
+        </p><p class='next'>
+            <span>Next Post</span>
+            <a href='http://grigtod.com/autostereoscopic-3d-display/'>Automultiscopic 3D Display</a>
+        </p></nav>                <div class="entry-categories">
+                                    </div>
+                <div class="entry-tags">
+                                    </div>
+            </div>
+                    </div>
+    </div>
+
+    
+</div> <!-- .main -->
+
+<footer class="site-footer" role="contentinfo">
+    <h3>
+        <a href="http://grigtod.com">Grigor Todorov</a>
+    </h3>
+            <ul class='social-media-icons'>            <li>
+            <a target="_blank" href="https://twitter.com/grigtod">
+                                <i class="fa fa-twitter-square"></i>            </a>
+            </li>            <li>
+            <a target="_blank" href="https://www.youtube.com/user/GrigorTodorov/videos">
+                                <i class="fa fa-youtube-square"></i>            </a>
+            </li>            <li>
+            <a target="_blank" href="http://uk.linkedin.com/in/grigtod">
+                                <i class="fa fa-linkedin-square"></i>            </a>
+            </li></ul>    <div class="design-credit">
+        <p><a href="http://www.competethemes.com/tracks/">Tracks WordPress Theme</a> by Compete Themes</p>
+    </div>
+</footer>
+<button id="return-top" class="return-top">
+    <i class="fa fa-arrow-up"></i>
+</button>
+
+
+</div><!-- .overflow-container -->
+
+<script type='text/javascript' src='http://grigtod.com/wp-content/themes/tracks/js/build/production.min.js?ver=3.9.9' async='async'></script>
+</body>
+</html>

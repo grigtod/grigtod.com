@@ -262,7 +262,7 @@ $("#send-mail").click(function () {
 
 
 
-    //Function for show or hide portfolio desctiption.
+    //Function for show or hide portfolio description.
     $.fn.showHide = function (options) {
         var defaults = {
             speed: 1000,

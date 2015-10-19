@@ -309,13 +309,13 @@ p {
     padding-bottom:20px;
 }
 .thumbnail .mask {
-    opacity:0.85;
+    opacity:0.10;
     filter: alpha(opacity=85);
-    top:100%;
+    top:0;
     left:0;
     width:100%;
     height:100%;
-    background:#181A1C;
+    background:#4099ff;
     position:absolute;
     -webkit-transition: all 0.2s ease-out;
     -moz-transition: all 0.2s ease-out;
@@ -324,7 +324,7 @@ p {
     transition: all 0.2s ease-out;
 }
 .thumbnail:hover .mask {
-    top:0;
+    top:100%;
 }
 /*
 2.4 Socail icons
