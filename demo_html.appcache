@@ -1,7 +1,0 @@
-ExpiresActive On
-ExpiresDefault A0
-
-CACHE MANIFEST
-<FilesMatch "\.(|jpg|png|ico|css|js|xml)$">
-ExpiresDefault A300
-</FilesMatch>
