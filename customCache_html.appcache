@@ -1,0 +1,4 @@
+CACHE MANIFEST
+<FilesMatch "\.(|jpg|png|ico|css|js)$">
+Header set Cache-Control "max-age=300, public"
+</FilesMatch>
