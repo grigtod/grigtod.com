@@ -1,0 +1,7 @@
+newer landing page:
+
+assets
+images
+index,
+
+all the other assets are from the portfolio page (old page)

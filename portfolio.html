@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<!--"
+	Some references:
+	* Base template design: GraphBerry, http://graphberry.com
+	* Avatar effect: http://mrdoob.com/lab/javascript/webgl/kinect/
+	* Image slider: http://www.jssor.com/demos/image-gallery.slider
+	
+	I'm not a web developer! If you are a web developer please don't read the following code as it could lead to psychological trauma and/or existential crisis. You have been warned!
+-->
+<html lang="en"> 
+    <head>
+        <meta charset=utf-8>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			Grigor Todorov - Portfolio Website
+		</title>
+        <!-- Load Roboto font -->
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <!-- Load css styles -->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" />
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" href="css/pluton.css" />
+        <!--[if IE 7]>
+            <link rel="stylesheet" type="text/css" href="css/pluton-ie7.css" />
+        <![endif]-->
+        <link rel="stylesheet" type="text/css" href="css/jquery.cslider.css" />
+        <link rel="stylesheet" type="text/css" href="css/jquery.bxslider.css" />
+        <link rel="stylesheet" type="text/css" href="css/animate.css" />
+        <!-- Fav and touch icons -->
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72.png">
+        <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
+        <link rel="shortcut icon" href="images/ico/favicon.ico">
+		
+    </head>
+    <body>
+        <div class="section primary-section" id="About">
+            <div class="triangle"></div>
+		
+			<div class="container">
+				<div class="row-fluid team"> 
+                    <div class="span4.centered" id="first-person">
+                        <div class="thumbnail">
+						<!--div class="circle-border zoom-in-avatar"-->
+						<!--WEBGL STUFF START-->
+							<div id="container"></div>
+								<script src="webgl/build/three.min.js"></script>
+								<script src="webgl/js/Detector.js"></script>
+								<script src="webgl/js/libs/stats.min.js"></script>
+								<script id="vs" type="x-shader/x-vertex">
+									uniform sampler2D map;
+									uniform float width;
+									uniform float height;
+									uniform float nearClipping, farClipping;
+									uniform float pointSize;
+									uniform float zOffset;
+									varying vec2 vUv;
+									const float XtoZ = 1.11146; // tan( 1.0144686 / 2.0 ) * 2.0;
+									const float YtoZ = 0.83359; // tan( 0.7898090 / 2.0 ) * 2.0;
+									void main() {
+										vUv = vec2( position.x / width, position.y / height );
+										vec4 color = texture2D( map, vUv );
+										float depth = ( color.r + color.g + color.b ) / 0.01;
+										// Projection code by @kcmic
+										float z = ( 1.0 - depth ) * (farClipping - nearClipping) + nearClipping;
+										vec4 pos = vec4(
+											( position.x / width - 0.5 ) * z * XtoZ,
+											( position.y / height - 0.5 ) * z * YtoZ,
+											- z + zOffset,
+											1.0);
+										gl_PointSize = pointSize;
+										gl_Position = projectionMatrix * modelViewMatrix * pos;
+									}
+								</script>
+
+								<script id="fs" type="x-shader/x-fragment">
+									uniform sampler2D map;
+									varying vec2 vUv;
+									void main() {
+										vec4 color = texture2D( map, vUv );
+										gl_FragColor = vec4( color.r, color.g, color.b, 0.2 );
+									}
+								</script>
+								
+								<script>
+									var container;
+									var scene, camera, light, renderer;
+									var geometry, cube, mesh, material;
+									var mouse, center;
+									var stats;
+									var video, texture;
+									if ( Detector.webgl ) {
+										init();
+										animate();
+									} else {
+										Detector.addGetWebGLMessage();
+									}
+									function init() {
+										container = document.getElementById( 'container' );
+										stats = new Stats();
+										stats.domElement.style.position = 'absolute';
+										stats.domElement.style.top = '0px';
+										camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 1, 10000 );
+										camera.position.set( 0, 0, 500 );
+										scene = new THREE.Scene();
+										center = new THREE.Vector3();
+										center.z = - 1000;
+										video = document.createElement( 'video' );
+										video.addEventListener( 'loadedmetadata', function ( event ) {
+										texture = new THREE.VideoTexture( video );
+										texture.minFilter = THREE.NearestFilter;
+										var width = 640, height = 480;
+										var nearClipping = 20, farClipping = 1;
+										geometry = new THREE.BufferGeometry();
+										var vertices = new Float32Array( width * height * 3 );
+										for ( var i = 0, j = 0, l = vertices.length; i < l; i += 3, j ++ ) {
+
+											vertices[ i ] = j % width;
+											vertices[ i + 1 ] = Math.floor( j / width );
+
+										}
+										geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+										material = new THREE.ShaderMaterial( {
+											uniforms: {
+												"map": { type: "t", value: texture },
+												"width": { type: "f", value: width },
+												"height": { type: "f", value: height },
+												"nearClipping": { type: "f", value: nearClipping },
+												"farClipping": { type: "f", value: farClipping },
+												"pointSize": { type: "f", value: 0.5 },
+												"zOffset": { type: "f", value: 1100 }
+											},
+											vertexShader: document.getElementById( 'vs' ).textContent,
+											fragmentShader: document.getElementById( 'fs' ).textContent,
+											blending: THREE.AdditiveBlending,
+											depthTest: false, depthWrite: false,
+											transparent: true
+										} );
+											mesh = new THREE.Points( geometry, material );
+											scene.add( mesh );
+										}, false );
+										video.loop = true;
+										video.src = 'webgl/newCutUltraTiny.webm';
+										video.play();
+										renderer = new THREE.WebGLRenderer({ alpha: true });
+										renderer.setClearColor(0xffffff, 0);
+										camera.aspect = 1;
+										camera.updateProjectionMatrix();
+										renderer.setPixelRatio( window.devicePixelRatio );
+										renderer.setSize( window.innerWidth/7, window.innerWidth/7 );
+										container.appendChild( renderer.domElement );
+										mouse = new THREE.Vector3( 0, 0, 1 );
+										document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+										window.addEventListener( 'resize', onWindowResize, false );
+									}
+									function onWindowResize() {
+										camera.aspect = 1;
+										camera.updateProjectionMatrix();
+										renderer.setSize( window.innerWidth/7, window.innerWidth/7 );
+									}
+									function onDocumentMouseMove( event ) {
+										mouse.x = ( event.clientX - window.innerWidth / 2 );
+										mouse.y = ( event.clientY - window.innerHeight / 2 );
+									}
+									function animate() {
+										requestAnimationFrame( animate );
+										render();
+										stats.update();
+									}
+									function render() {
+									mesh.rotation.y =  (mouse.x  * 0.00025);
+									camera.position.x = -( mouse.x ) * 0.2;
+									mesh.rotation.x =  (mouse.y  * 0.00025);
+									camera.position.y = ( mouse.y ) * 0.2;
+									renderer.render( scene, camera );
+									}
+								</script>		
+							<!--WEBGL STUFF END-->			  
+							<ul class="social">
+								<li>
+									<a target="_blank" href="http://twitter.com/grigtod">
+										<span class="icon-twitter-circled"></span>
+									</a>
+								</li>
+								<li>
+									<a target="_blank" href="http://uk.linkedin.com/in/grigtod">
+										<span class="icon-linkedin-circled"></span>
+									</a>
+								</li>
+							</ul>
+							<p>grigtod@gmail.com</p>
+						</div>
+                    </div>
+                </div>
+                <div class="title">
+                    <h2>Hello, my name is Grigor Todorov.</h2>
+                    <p>I am a game developer and this is my portfolio.</p>
+                </div>
+            </div>
+        </div>
+        <!-- About us section end -->
+        <!-- Portfolio section start -->
+        <div class="section secondary-section" id="Projects">
+            <div class="triangle"></div>
+            <div class="container">
+                    <!-- Start details for portfolio project 2 -->
+                    <div id="slidingDiv1" class="toggleDiv row-fluid single-project">
+                        <div class="span12">
+                            <div class="project-description">
+                                <div class="project-title clearfix">
+                                    <h3>&emsp;Gaze-contingent Depth of Field</h3>
+                                    <span class="show_hide close">
+                                        <i class="icon-cancel"></i>
+                                    </span>
+                                </div>
+							</div>
+								<div class="video-container"><iframe width="550" height="309" src="https://www.youtube.com/embed/vNmGrqaB_mk" style="border:none;" allowfullscreen></iframe></div>
+                                <p>In my opinion eye tracking is very important for virtual/augmented reality HMD. It is relatively cheap hardware wise and it can practically be used as another form of input. Successfully utilizing gaze tracking increases immersion and provides easier ways to interact with objects.</p>
+								<p>Many games use depth of field to increase immersion, but for proper real-lifelike experience in a virtual reality head mounted display simple depth of field effect is not enough. Gaze-contingent depth of field on the other hand helps simulate vision effects such as vergence and focus more closely to the real life and effectively will decrease eye strain and increase immersion.</p>
+								<p>In the video above I have implemented such depth of field. It uses Tobii EyeX and Unity3D.
+								<br>The user can switch between two different versions of gaze-dependant depth of field.
+								<br>The first version features blurring that happens on objects both close and further away from the camera.
+								<br>The second version is more lifelike and the DOF can only be observed when the user focuses on an object that is close.</p>
+								<p>Having an eye tracking solution in a virtual reality HMD also brings the possibility of more personalized LOD.
+								<br>Currently the Level Of Detail in games happen based of the distance from the object to the camera. The further the distance the smaller is the polycount of the object. But sometimes the player looks at the background can could notice LOD popping of objects or generally unpleasantness in the scenery far away.
+								<br>With an eye tracking solution a new form of LOD can be achieved, one that prioritizes objects closer to the position the player looks at. That way objects far from the player gaze need not be rendered with the highest LOD possible even if they are close to the camera. This sort of LOD in combination with the gaze-contingent depth of field will further mask LOD popping and increase performance as only objects that are observed will be fully rendered with maximum quality.</p>   
+						   </div>
+                    </div>
+                    <!-- End details for portfolio project 1 -->
+                    <!-- Start details for portfolio project 2 -->
+                    <div id="slidingDiv2" class="toggleDiv row-fluid single-project">
+                        <div class="span12">
+                            <div class="project-description">
+                                <div class="project-title clearfix">
+                                    <h3>&emsp;Interactive Video Walls</h3>
+                                    <span class="show_hide close">
+                                        <i class="icon-cancel"></i>
+                                    </span>
+                                </div>
+							</div>
+								
+							<p>This was a short term project for <a title="Inition" href="https://www.inition.co.uk/case_study/interactive-vr-and-motion-tracking-experience-for-westfields-future-fashion/" target="_blank">Inition</a></p>
+							<p>The project consisted of using Kinect v2 to create 3 interactive experiences.</p>
+							<p>The three 5 x 2.5 meter screens were part of multiple installations and the event took place in both 
+							<a title="Westfield London" href="http://uk.westfield.com/london/" target="_blank">Westfield London</a>
+							(27 – 29 March 2015) and <a title="Westfield Stratford City" href="http://uk.westfield.com/stratfordcity/" target="_blank">Westfield&nbsp;Stratford City</a>
+							(2 - 4 March 2015).</p>
+							<p>The Inition team was responsible for the art direction and the assets while I was programming.</p>
+                        </div>	
+					
+						<script type="text/javascript" src="gallery/js/jssor.slider-20.min.js"></script>
+						<!-- use jssor.slider-20.debug.js instead for debug -->
+						<script>
+							jssor_1_slider_init = function() {
+								var jssor_1_SlideshowTransitions = [
+								  {$Duration:1200,x:0.3,$During:{$Left:[0.3,0.7]},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,x:-0.3,$SlideOut:true,$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,x:-0.3,$During:{$Left:[0.3,0.7]},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,x:0.3,$SlideOut:true,$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,y:0.3,$During:{$Top:[0.3,0.7]},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,y:-0.3,$SlideOut:true,$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,y:-0.3,$During:{$Top:[0.3,0.7]},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,y:0.3,$SlideOut:true,$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,x:0.3,$Cols:2,$During:{$Left:[0.3,0.7]},$ChessMode:{$Column:3},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,x:0.3,$Cols:2,$SlideOut:true,$ChessMode:{$Column:3},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,y:0.3,$Rows:2,$During:{$Top:[0.3,0.7]},$ChessMode:{$Row:12},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,y:0.3,$Rows:2,$SlideOut:true,$ChessMode:{$Row:12},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,y:0.3,$Cols:2,$During:{$Top:[0.3,0.7]},$ChessMode:{$Column:12},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,y:-0.3,$Cols:2,$SlideOut:true,$ChessMode:{$Column:12},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,x:0.3,$Rows:2,$During:{$Left:[0.3,0.7]},$ChessMode:{$Row:3},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,x:-0.3,$Rows:2,$SlideOut:true,$ChessMode:{$Row:3},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,x:0.3,y:0.3,$Cols:2,$Rows:2,$During:{$Left:[0.3,0.7],$Top:[0.3,0.7]},$ChessMode:{$Column:3,$Row:12},$Easing:{$Left:$Jease$.$InCubic,$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,x:0.3,y:0.3,$Cols:2,$Rows:2,$During:{$Left:[0.3,0.7],$Top:[0.3,0.7]},$SlideOut:true,$ChessMode:{$Column:3,$Row:12},$Easing:{$Left:$Jease$.$InCubic,$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,$Delay:20,$Clip:3,$Assembly:260,$Easing:{$Clip:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,$Delay:20,$Clip:3,$SlideOut:true,$Assembly:260,$Easing:{$Clip:$Jease$.$OutCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,$Delay:20,$Clip:12,$Assembly:260,$Easing:{$Clip:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+								  {$Duration:1200,$Delay:20,$Clip:12,$SlideOut:true,$Assembly:260,$Easing:{$Clip:$Jease$.$OutCubic,$Opacity:$Jease$.$Linear},$Opacity:2}
+								];
+								
+								var jssor_1_options = {
+								  $AutoPlay: true,
+								  $SlideshowOptions: {
+									$Class: $JssorSlideshowRunner$,
+									$Transitions: jssor_1_SlideshowTransitions,
+									$TransitionsOrder: 1
+								  },
+								  $ArrowNavigatorOptions: {
+									$Class: $JssorArrowNavigator$
+								  },
+								  $ThumbnailNavigatorOptions: {
+									$Class: $JssorThumbnailNavigator$,
+									$Cols: 10,
+									$SpacingX: 8,
+									$SpacingY: 8,
+									$Align: 360
+								  }
+								};
+								
+								var jssor_1_slider = new $JssorSlider$("jssor_1", jssor_1_options);
+								
+								//responsive code begin
+								//you can remove responsive code if you don't want the slider scales while window resizes
+								function ScaleSlider() {
+									var refSize = jssor_1_slider.$Elmt.parentNode.clientWidth;
+									if (refSize) {
+										refSize = Math.min(refSize, 800);
+										jssor_1_slider.$ScaleWidth(refSize);
+									}
+									else {
+										window.setTimeout(ScaleSlider, 30);
+									}
+								}
+								ScaleSlider();
+								$Jssor$.$AddEvent(window, "load", ScaleSlider);
+								$Jssor$.$AddEvent(window, "resize", $Jssor$.$WindowResizeFilter(window, ScaleSlider));
+								$Jssor$.$AddEvent(window, "orientationchange", ScaleSlider);
+								//responsive code end
+							};
+						</script>
+
+
+						<div id="jssor_1" style="position: relative; margin: 0 auto; top: 0px; left: 0px; width: 800px; height: 456px; overflow: hidden; visibility: hidden; background-color: #181a1c;">
+							<!-- Loading Screen -->
+							<div data-u="loading" style="position: absolute; top: 0px; left: 0px;">
+								<div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+								<div style="position:absolute;display:block;background:url('gallery/img/loading.gif') no-repeat center center;top:0px;left:0px;width:100%;height:100%;"></div>
+							</div>
+							<div data-u="slides" style="cursor: default; position: relative; top: 0px; left: 0px; width: 800px; height: 356px; overflow: hidden;">
+								<div style="display: none;">
+									<img data-u="image" alt="Video wall picture 1 failed to load" src="gallery/videoWall/1.jpg" />
+									<img data-u="thumb" alt="Video wall picture 1 failed to load" src="gallery/videoWall/thumb-01.jpg" />
+								</div>
+								<div style="display: none;">
+									<img data-u="image" alt="Video wall picture 2 failed to load" src="gallery/videoWall/2.jpg" />
+									<img data-u="thumb" alt="Video wall picture 2 failed to load" src="gallery/videoWall/thumb-02.jpg" />
+								</div>
+								<div style="display: none;">
+									<img data-u="image" alt="Video wall picture 3 failed to load" src="gallery/videoWall/3.jpg" />
+									<img data-u="thumb" alt="Video wall picture 3 failed to load" src="gallery/videoWall/thumb-03.jpg" />
+								</div>
+								<div style="display: none;">
+									<img data-u="image" alt="Video wall picture 4 failed to load" src="gallery/videoWall/4.jpg" />
+									<img data-u="thumb" alt="Video wall picture 4 failed to load" src="gallery/videoWall/thumb-04.jpg" />
+								</div>
+								<div style="display: none;">
+									<img data-u="image" alt="Video wall picture 5 failed to load" src="gallery/videoWall/5.jpg" />
+									<img data-u="thumb" alt="Video wall picture 5 failed to load" src="gallery/videoWall/thumb-05.jpg" />
+								</div>
+								<div style="display: none;">
+									<img data-u="image" alt="Video wall picture 6 failed to load" src="gallery/videoWall/6.jpg" />
+									<img data-u="thumb" alt="Video wall picture 6 failed to load" src="gallery/videoWall/thumb-06.jpg" />
+								</div>
+							</div>
+							<!-- Thumbnail Navigator -->
+							<div data-u="thumbnavigator" class="jssort01" style="position:absolute;left:0px;bottom:0px;width:800px;height:100px;" data-autocenter="1">
+								<!-- Thumbnail Item Skin Begin -->
+								<div data-u="slides" style="cursor: default;">
+									<div data-u="prototype" class="p">
+										<div class="w">
+											<div data-u="thumbnailtemplate" class="t"></div>
+										</div>
+										<div class="c"></div>
+									</div>
+								</div>
+								<!-- Thumbnail Item Skin End -->
+							</div>
+							<!-- Arrow Navigator -->
+							<span data-u="arrowleft" class="jssora05l" style="top:158px;left:8px;width:40px;height:40px;"></span>
+							<span data-u="arrowright" class="jssora05r" style="top:158px;right:8px;width:40px;height:40px;"></span>
+							<a href="http://www.jssor.com" style="display:none">Jssor Slider</a>
+						</div>
+						<script>
+							jssor_1_slider_init();
+						</script>	
+                    </div>
+                    <!-- End details for portfolio project 3 -->
+					
+					<!-- Start details for Project Foundation -->
+                <div id="single-project">
+                    <div id="slidingDiv" class="toggleDiv row-fluid single-project">
+                        <div class="span12">
+                            <div class="project-description">
+                                <div class="project-title clearfix">
+                                    <h3>&emsp;Project Foundation</h3>
+                                    <span class="show_hide close">
+                                        <i class="icon-cancel"></i>
+                                    </span>
+                                </div>
+							</div>
+								<p><a target="_blank" href="https://drive.google.com/file/d/0B2bMrAy-mFHIWF9JZkRTN1liOVE">Link to video.</a></p>
+                                <p>“Project Foundation” is a multiplayer game prototype. It was developed by a small group of people. Each one of us wore many hats and this is the result of enormous collaborative effort and a lot of trial and error.</p>		
+                        </div>
+                    </div>
+                    <!-- End details for Project Foundation -->
+					
+                    <!-- Start details for portfolio project 4 -->
+                    <div id="slidingDiv3" class="toggleDiv row-fluid single-project">
+                        <div class="span12">
+                            <div class="project-description">
+                                <div class="project-title clearfix">
+                                    <h3>&emsp;Project for Some Client</h3>
+                                    <span class="show_hide close">
+                                        <i class="icon-cancel"></i>
+                                    </span>
+                                </div>
+							</div>
+								<div class="video-container"><iframe width="550" height="309" src="https://www.youtube.com/embed/hFdH3c72my0" style="border:none;" allowfullscreen></iframe></div>
+                                <p>My goal was to create an interesting car selection menu for a video game. I came up with the idea to have the cars come and go, stopping in front of the camera and I really wanted to see it in action.
+								<br>After the main part was completed I decided to focus on making it look better.
+								Some of the things that helped the overall look include adaptive depth of field and a dirty camera effects.</p>
+                            
+                        </div>
+                    </div>
+                    <!-- End details for portfolio project 4 -->
+                    <!-- Start details for portfolio project 5 -->
+                    <div id="slidingDiv4" class="toggleDiv row-fluid single-project">
+                        <div class="span12">
+                            <div class="project-description">
+                                <div class="project-title clearfix">
+                                    <h3>&emsp;Interlacing for Unity 4 Free</h3>
+                                    <span class="show_hide close">
+                                        <i class="icon-cancel"></i>
+                                    </span>
+                                </div>
+							</div>
+                                <p>Update2:<br>
+								Eric James from <a href="http://www.ins3d.com/" target="_blank">Ins3D</a> made some improvements upon my implementation:<br>
+								<a href="http://developer.freevi.com/forum/viewquestion/quest59/Interlaced-3D-for-Unity-Free" target="_blank">link to the freevi forum page</a><br>
+								<a href="https://docs.google.com/file/d/0B3RYTaIykiaqYXdPbnRLUzlPb28/edit" target="_blank">link to his improved version</a> <br>
+								……………… <br>
+								Update1:<br>
+								The following post was written before the release of Unity 5.<br>
+								Even with the new version of Unity (Render Textures for free) my interlacing has a better performance on some devices.<br>
+								………………<br>
+								<p>After successfully completing the first round of their challenge I received a free Commander 3D tablet from <a href="http://freevi.com/" target="_blank">freevi</a>.</p>
+								<p>The first version of their sdk for Unity  used the usual method of rendering interlaced 3D: render textures.<br />
+								Render textures are only available for Unity Pro users. In order to develop and publish an application for the Commander 3D tablet the developers had to buy Unity Pro and Unity Pro Android licenses. This could have cost them 3000$ or 150$ for subscriptions every month (12 months minimal contract).</p>
+								<p>I tried to look at the problem from a different perspective. <br>Why not, instead of rendering the two images and interlacing them, we create a mask for half the pixels in each image and then render it. Fortunately the shader for such mask was very easy to write.</p>
+								<p>The final result was very surprising as it had a better performance (on the tablet) than the original render texture alternative. It increased performance by 2-10 fps and saved developers 3000$ per seat.</p>
+								<p>The github repo can be found here:<br> <a href="https://github.com/grigtod/Interlaced3DUnityFree" target="_blank">https://github.com/grigtod/Interlaced3DUnityFree</a><br />
+								I would like to note that this method of 3D interlacing is not hardware specific. If you need to interlace 2 or more cameras you can use it.</p>
+                        </div>
+                    </div>
+                    <!-- End details for portfolio project 5 -->
+                    <!-- Start details for portfolio project 6 -->
+                    <div id="slidingDiv5" class="toggleDiv row-fluid single-project">
+                        <div class="span12">
+                            <div class="project-description">
+                                <div class="project-title clearfix">
+                                    <h3>&emsp;Zen Build</h3>
+                                    <span class="show_hide close">
+                                        <i class="icon-cancel"></i>
+                                    </span>
+                                </div>
+							</div>
+								<div class="video-container"><iframe width="550" height="309" src="https://www.youtube.com/embed/365lrZlf89A" style="border:none;" allowfullscreen></iframe></div>
+								<p>Zen Build is a free puzzle game currently available for Android and Web. Slot different pieces together to solve numerous puzzles and enjoy a relaxing music and minimalistic design.</p>
+								<p><em><strong>Game Links:</strong> </em> <br>
+								<a href="https://play.google.com/store/apps/details?id=com.grigtod.zenbuild" target="_blank">Google Play</a><br>
+								<a href="http://gamejolt.com/games/puzzle/zen-build/38556/" target="_blank">Gamejolt</a><br>
+								<a href="http://grigtod.itch.io/zen-build" target="_blank">itch.io</a>
+								</p>
+								<p><em><strong>Press Kit:</strong></em><br>
+								<a href="https://drive.google.com/folderview?id=0B2bMrAy-mFHIQWlheVdQTU5LY3M&amp;usp=sharing" target="_blank">Google Drive</a><br>
+								<a href="https://www.dropbox.com/sh/od3dj25pomzcygs/AACG1Q7tKO9mcOJ8HtpwC2fua?dl=0" target="_blank">Dropbox</a>
+								</p>
+								<p><em><strong>Press:</strong></em><br>
+								<a href="http://www.rockpapershotgun.com/2014/11/20/wooden-model-building-game/" target="_blank">rockpapershotgun.com</a><br>
+								<a href="http://strangera.com/2015/01/14/zen-build/" target="_blank">Strangera.com</a><br>
+								<a href="http://gdinbg.tumblr.com/post/107919516321" target="_blank">gdinbg.tumblr.com</a>	
+								</p>
+								<p><em><strong>Favourite quotes from players:</strong></em> <br>
+								"Best indie game ever saw this game on 9gag and i immediately downloaded it. i rarely give reviews but this one really caught me. hats off to the developer. very easy to play but challenging." <br>~ Christiano Nabong (google play)<br><br>
+								"Innovative Relaxing 3D puzzle with full rotation control. Have to be a little precise on where a piece goes or it will kinda fling it at the main body and bounce off. Nice physics touch!" <br>~ Kitty Phipps (google play) <br><br>
+								A very interesting and somewhat challenging game. This really helped me calm myself after today. 11/10 will be watching for updates! <br>~ wilcojar000 (gamejolt)
+								</p>
+							   
+                        </div>
+                    </div>
+                    <!-- End details for portfolio project 6 -->
+                    <!-- Start details for portfolio project 7 -->
+                    <div id="slidingDiv6" class="toggleDiv row-fluid single-project">
+                        
+                        <div class="span12">
+                            <div class="project-description">
+                                <div class="project-title clearfix">
+                                    <h3>&emsp;Prototypes</h3>
+                                    <span class="show_hide close">
+                                        <i class="icon-cancel"></i>
+                                    </span>
+                                </div>
+      
+									<p>	Through the years I have developed numerous game prototypes. Here you can find videos of some of my favourites.</p>
+									 <div class="container">
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/uCB3ZcGdQ6U" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/LEYiSiFkeaY" style="border:none;" allowfullscreen ></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/KtS8EoUmXBw?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/m0KkLcTNX-s?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/Jz6blYyzva0?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/V5fZDH-d26U?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/04Bxf6VzsHQ?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="http://www.youtube.com/embed/nFLNylyNBng?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/_XePuRyD6_o?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/O0T-JNaBfF8?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/zmFa_-sqpVI?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/gwYZCRClqAs?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/vfwjaP0jI00?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/yVnLC81mW_Y?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="http://www.youtube.com/embed/kJAnlvZ-Xhs?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/h9yVFyo4xv4?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+										<div class="video-container"><iframe width="500" height="281" src="https://www.youtube.com/embed/W44kPYAzkyA?feature=oembed" style="border:none;" allowfullscreen></iframe></div>
+									</div>
+							  </div>
+                        </div>
+                    </div>
+                    <!-- End details for portfolio project 7 -->
+                    <!-- Start details for portfolio project 8 -->
+                    <!--div id="slidingDiv7" class="toggleDiv row-fluid single-project">
+                        <div class="span6">
+                            <img src="images/Portfolio08.jpg" alt="project 8">
+                        </div>
+                        <div class="span6">
+                            <div class="project-description">
+                                <div class="project-title clearfix">
+                                    <h3>Webste for Some Client</h3>
+                                    <span class="show_hide close">
+                                        <i class="icon-cancel"></i>
+                                    </span>
+                                </div>
+                                <div class="project-info">
+                                    <div>
+                                        <span>Client</span>Some Client Name</div>
+                                    <div>
+                                        <span>Date</span>July 2013</div>
+                                    <div>
+                                        <span>Skills</span>HTML5, CSS3, JavaScript</div>
+                                    <div>
+                                        <span>Link</span>http://examplecomp.com</div>
+                                </div>
+                                <p>What if you gave someone a gift, and they neglected to thank you for it - would you be likely to give them another? Life is the same way. In order to attract more of the blessings that life has to offer, you must truly appreciate what you already have.</p>
+                            </div>
+                        </div>
+                    </div-->
+                    <!-- End details for portfolio project 8 -->
+                    <!-- Start details for portfolio project 9 -->
+                    <!--div id="slidingDiv8" class="toggleDiv row-fluid single-project">
+                        <div class="span6">
+                            <img src="images/Portfolio09.jpg" alt="project 9">
+                        </div>
+                        <div class="span6">
+                            <div class="project-description">
+                                <div class="project-title clearfix">
+                                    <h3>Webste for Some Client</h3>
+                                    <span class="show_hide close">
+                                        <i class="icon-cancel"></i>
+                                    </span>
+                                </div>
+                                <div class="project-info">
+                                    <div>
+                                        <span>Client</span>Some Client Name</div>
+                                    <div>
+                                        <span>Date</span>July 2013</div>
+                                    <div>
+                                        <span>Skills</span>HTML5, CSS3, JavaScript</div>
+                                    <div>
+                                        <span>Link</span>http://examplecomp.com</div>
+                                </div>
+                                <p>I learned that we can do anything, but we can't do everything... at least not at the same time. So think of your priorities not in terms of what activities you do, but when you do them. Timing is everything.</p>
+                            </div>
+                        </div>
+                    </div-->
+                    <!-- End details for portfolio project 9 -->
+                    <ul id="portfolio-grid" class="thumbnails row">
+                        
+                        <li class="span4 mix photo">
+                            <div class="thumbnail">
+                                <img src="images/Portfolio02.jpg" alt="project 2">
+                                <a href="#single-project" class="show_hide more" rel="#slidingDiv1">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <h3>Gaze-contingent Depth of Field</h3>
+                                <p>Use of eye tracking for more realistic FOV</p>
+                                <div class="mask"></div>
+                            </div>
+                        </li>
+                        <li class="span4 mix identity">
+                            <div class="thumbnail">
+                                <img src="images/Portfolio03.jpg" alt="project 3">
+                                <a href="#single-project" class="more show_hide" rel="#slidingDiv2">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <h3>Interactive Video Walls</h3>
+                                <p>Kinect v2 and 220inch LED displays</p>
+                                <div class="mask"></div>
+                            </div>
+                        </li>
+						<li class="span4 mix web">
+                            <div class="thumbnail">
+                                <img src="images/Portfolio01.jpg" alt="project 1">
+                                <a href="#single-project" class="more show_hide" rel="#slidingDiv">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <h3>Project Foundation</h3>
+                                <p>Multiplayer top-down shooter prototype</p>
+                                <div class="mask"></div>
+                            </div>
+                        </li>
+                        <li class="span4 mix web">
+                            <div class="thumbnail">
+                                <img src="images/Portfolio04.jpg" alt="project 4">
+                                <a href="#single-project" class="show_hide more" rel="#slidingDiv3">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <h3>Car Selection Menu for a Racing Game</h3>
+                                <p>The most exotic cars at your fingertips</p>
+                                <div class="mask"></div>
+                            </div>
+                        </li>
+                        <li class="span4 mix photo">
+                            <div class="thumbnail">
+                                <img src="images/Portfolio05.jpg" alt="project 5">
+                                <a href="#single-project" class="show_hide more" rel="#slidingDiv4">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <h3>Interlacing for Unity 4 Free</h3>
+                                <p>No render textures required</p>
+                                <div class="mask"></div>
+                            </div>
+                        </li>
+                        <li class="span4 mix identity">
+                            <div class="thumbnail">
+                                <img src="images/Portfolio06.jpg" alt="project 6">
+                                <a href="#single-project" class="show_hide more" rel="#slidingDiv5">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <h3>Zen Build</h3>
+                                <p>Puzzle game available for Android and Web.</p>
+                                <div class="mask"></div>
+                            </div>
+                        </li>
+                        <li class="span4 mix web">
+                            <div class="thumbnail">
+                                <img src="images/Portfolio07.jpg" alt="project 7" />
+                                <a href="#single-project" class="show_hide more" rel="#slidingDiv6">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <h3>Prototypes</h3>
+                                <p>Many exciting prototypes</p>
+                                <div class="mask"></div>
+                            </div>
+                        </li>
+                        <!--li class="span4 mix photo">
+                            <div class="thumbnail">
+                                <img src="images/Portfolio08.jpg" alt="project 8">
+                                <a href="#single-project" class="show_hide more" rel="#slidingDiv7">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <h3>Thumbnail label</h3>
+                                <p>Thumbnail caption...</p>
+                                <div class="mask"></div>
+                            </div>
+                        </li>
+                        <li class="span4 mix identity">
+                            <div class="thumbnail">
+                                <img src="images/Portfolio09.jpg" alt="project 9">
+                                <a href="#single-project" class="show_hide more" rel="#slidingDiv8">
+                                    <i class="icon-plus"></i>
+                                </a>
+                                <h3>Thumbnail label</h3>
+                                <p>Thumbnail caption...</p>
+                                <div class="mask"></div>
+                            </div>
+                        </li-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Portfolio section end -->
+		 <!-- Contact section start -->
+		<div class="section primary-section" id="Academic">
+            <div class="triangle"></div>
+            <div class="span9 center contact-info">
+				<p><a target="_blank" href="https://drive.google.com/file/d/0Bxc2hRv1Yzs-UC1uM3I2bDI1aGc/view?usp=sharing">BSc Computer Games Development (2011-2014)</a></p>
+				<p><a target="_blank" href="https://www.dropbox.com/s/1i3kmx81rw07izq/Thesis%20-%20Grigor.pdf?dl=0">MSc By Research (2014-2015)</a></p>
+            </div>
+        </div>
+        <!-- Contact section end -->
+        <!-- ScrollUp button start -->
+        <div class="scrollup">
+            <a href="#">
+                <i class="icon-up-open"></i>
+            </a>
+        </div>
+        <!-- ScrollUp button end -->
+        <!-- Include javascript -->
+        <script src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery.mixitup.js"></script>
+        <script type="text/javascript" src="js/bootstrap.js"></script>
+        <script type="text/javascript" src="js/modernizr.custom.js"></script>
+        <script type="text/javascript" src="js/jquery.bxslider.js"></script>
+        <script type="text/javascript" src="js/jquery.cslider.js"></script>
+        <script type="text/javascript" src="js/jquery.placeholder.js"></script>
+        <script type="text/javascript" src="js/jquery.inview.js"></script>
+		
+        <!-- css3-mediaqueries.js for IE8 or older -->
+        <!--[if lt IE 9]>
+            <script src="js/respond.min.js"></script>
+        <![endif]-->
+        <script type="text/javascript" src="js/app.js"></script>
+    </body>
+</html>
